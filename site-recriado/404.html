@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="robots" content="noindex" />
+    <title>Página não encontrada | Fábio Corrêa Guimarães</title>
+    <meta name="theme-color" content="#050b1a" />
+    <link rel="icon" href="assets/favicon-32.png" type="image/png" sizes="32x32" />
+    <link rel="apple-touch-icon" href="assets/apple-touch-icon.png" />
+    <style>
+      :root {
+        color-scheme: dark;
+        --canvas: #050b1a;
+        --ink: #eef3fa;
+        --ink-muted: #b6c1ce;
+        --brand-soft: #2b86ff;
+        --line: rgb(255 255 255 / 0.08);
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        min-height: 100vh;
+        display: grid;
+        place-items: center;
+        padding: 24px;
+        background: var(--canvas);
+        color: var(--ink);
+        font-family: "Inter", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        text-align: center;
+      }
+      h1 {
+        font-size: clamp(1.6rem, 1rem + 1.7vw, 2.35rem);
+        line-height: 1.14;
+        margin: 0 0 12px;
+      }
+      p {
+        color: var(--ink-muted);
+        max-width: 42ch;
+        margin: 0 auto 24px;
+        line-height: 1.6;
+      }
+      a {
+        display: inline-flex;
+        min-height: 46px;
+        align-items: center;
+        justify-content: center;
+        padding: 12px 24px;
+        border-radius: 10px;
+        background: #0f62fe;
+        color: #fff;
+        font-weight: 600;
+        font-size: 0.875rem;
+        text-decoration: none;
+        transition: background-color 0.3s ease;
+      }
+      a:hover {
+        background: #2b86ff;
+      }
+      a:focus-visible {
+        outline: 2px solid var(--brand-soft);
+        outline-offset: 3px;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>Página não encontrada</h1>
+      <p>O endereço acessado não existe ou foi movido.</p>
+      <a href="./index.html">Voltar para a página inicial</a>
+    </main>
+    <script>
+      // Tenta preservar a navegação: /portfolio (sem .html) -> portfolio.html
+      (function () {
+        var path = location.pathname.split("/").filter(Boolean).pop() || "";
+        if (/^portfolio\.?$/i.test(path.replace(/\.html$/, ""))) {
+          location.replace("./portfolio.html" + location.search + location.hash);
+        }
+      })();
+    </script>
+  </body>
+</html>

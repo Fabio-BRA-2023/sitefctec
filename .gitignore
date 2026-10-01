@@ -1,0 +1,13 @@
+# Midia e documentos pessoais (nao fazem parte do site)
+*.mp4
+*.pdf
+*.jpg
+*.jpeg
+*.png
+
+# Permite as imagens do site
+!site-recriado/assets/**
+
+# Ambiente
+.vscode/
+node_modules/
