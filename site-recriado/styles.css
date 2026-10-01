@@ -5482,10 +5482,14 @@ body > header {
 body > footer {
   padding-bottom: env(safe-area-inset-bottom, 0px);
 }
-img,
-video {
-  max-width: 100%;
-  height: auto;
+/* preflight de imagens dentro da camada base, para que as utilidades do
+   Tailwind (.h-9, .h-10, .object-cover etc.) continuem vencendo o height:auto */
+@layer base {
+  img,
+  video {
+    max-width: 100%;
+    height: auto;
+  }
 }
 @media (prefers-reduced-motion: reduce) {
   html {

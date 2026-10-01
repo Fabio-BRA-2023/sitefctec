@@ -1,7 +1,7 @@
 /* Service Worker - FC.tec
    Cache de estaticos + navegacao online-first com fallback offline.
-   Gerado por build-site.ps1 (versao fctec-202610011622). */
-const CACHE = "fctec-202610011622";
+   Gerado por build-site.ps1 (versao fctec-202610011718). */
+const CACHE = "fctec-202610011718";
 const ASSETS = [
   "./",
   "./index.html",

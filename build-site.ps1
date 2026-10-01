@@ -38,10 +38,6 @@ $marqueeHtml = '<div class="marquee-band"><div class="marquee-track">' +
     '<div class="marquee-group" aria-hidden="true">' + $marqueeGroup + '</div>' +
     '</div></div>'
 
-# secao "tecnologias" logo apos o FAQ (mensagem + faixa em movimento com os
-# mesmos textos da faixa do hero)
-$techCaption = 'TECNOLOGIAS ESCOLHIDAS CONFORME AS NECESSIDADES DE CADA PROJETO.'
-
 $marqueeCss = @'
 
 /* ---- Faixa em movimento (marquee) - adicionado na recriacao ---- */
@@ -99,10 +95,10 @@ $marqueeCss = @'
 $techCaption = 'TECNOLOGIAS ESCOLHIDAS CONFORME AS NECESSIDADES DE CADA PROJETO.'
 $techLogos = @(
     @('Hermes', 'hermes.svg'),
-    @('Vue.js', 'vuedotjs.svg'),
+    @('Vue.js', 'vuejs.svg'),
     @('OpenAI', 'openai.svg'),
     @('Supabase', 'supabase.svg'),
-    @('Tailwind', 'tailwindcss.svg'),
+    @('Tailwind', 'tailwind.svg'),
     @('Docker', 'docker.svg'),
     @('n8n', 'n8n.svg'),
     @('Meta ADS', 'meta.svg')
@@ -113,8 +109,8 @@ $logoGroup = ($techLogos | ForEach-Object {
 $techHtml = '<section class="tech-section border-b border-line">' +
     '<div class="tech-caption-wrap"><p class="tech-caption">' + $techCaption + '</p></div>' +
     '<div class="marquee-band marquee-logos"><div class="marquee-track">' +
-    '<div class="marquee-group">' + $marqueeGroup + '</div>' +
-    '<div class="marquee-group" aria-hidden="true">' + $marqueeGroup + '</div>' +
+    '<div class="marquee-group logo-group">' + $logoGroup + '</div>' +
+    '<div class="marquee-group logo-group" aria-hidden="true">' + $logoGroup + '</div>' +
     '</div></div></section>'
 
 $techCss = @'
@@ -207,10 +203,14 @@ body > header {
 body > footer {
   padding-bottom: env(safe-area-inset-bottom, 0px);
 }
-img,
-video {
-  max-width: 100%;
-  height: auto;
+/* preflight de imagens dentro da camada base, para que as utilidades do
+   Tailwind (.h-9, .h-10, .object-cover etc.) continuem vencendo o height:auto */
+@layer base {
+  img,
+  video {
+    max-width: 100%;
+    height: auto;
+  }
 }
 @media (prefers-reduced-motion: reduce) {
   html {
@@ -225,27 +225,6 @@ video {
   }
 }
 '@
-
-# ---- Faixa de tecnologias abaixo de "Perguntas frequentes" ----
-$techItems = @(
-    @('Hermes', 'hermes'),
-    @('Vue.js', 'vuejs'),
-    @('OpenAI', 'openai'),
-    @('Supabase', 'supabase'),
-    @('Tailwind', 'tailwind'),
-    @('Docker', 'docker'),
-    @('n8n', 'n8n'),
-    @('Meta ADS', 'meta')
-)
-$techGroup = ($techItems | ForEach-Object {
-    '<span class="tech-item"><img src="assets/tech/' + $_[1] + '.svg" alt="" width="26" height="26" loading="lazy"/><span>' + $_[0] + '</span></span>'
-}) -join ''
-$techHtml = '<section class="tech-band" aria-label="Tecnologias">' +
-    '<p class="tech-band-title">Tecnologias escolhidas conforme as necessidades de cada projeto.</p>' +
-    '<div class="tech-marquee"><div class="tech-track">' +
-    '<div class="tech-group">' + $techGroup + '</div>' +
-    '<div class="tech-group" aria-hidden="true">' + $techGroup + '</div>' +
-    '</div></div></section>'
 
 function Convert-Page([string]$html) {
     # remove todos os <script> (streams/HMR do SSR)
@@ -362,14 +341,24 @@ if (-not (Test-Path $techDir)) { New-Item -ItemType Directory -Path $techDir | O
 if (-not (Test-Path (Join-Path $techDir "hermes.svg"))) {
     [System.IO.File]::WriteAllText((Join-Path $techDir "hermes.svg"), $hermesSvg, [System.Text.UTF8Encoding]::new($false))
 }
-foreach ($slug in @('vuedotjs', 'supabase', 'tailwindcss', 'docker', 'n8n', 'meta', 'openai')) {
-    $file = Join-Path $techDir "$slug.svg"
+# arquivo local => slug do Simple Icons
+$techDownloads = @(
+    @('vuejs.svg', 'vuedotjs'),
+    @('supabase.svg', 'supabase'),
+    @('tailwind.svg', 'tailwindcss'),
+    @('docker.svg', 'docker'),
+    @('n8n.svg', 'n8n'),
+    @('meta.svg', 'meta'),
+    @('openai.svg', 'openai')
+)
+foreach ($pair in $techDownloads) {
+    $file = Join-Path $techDir $pair[0]
     if (-not (Test-Path $file)) {
-        $uri = if ($slug -eq 'openai') {
+        $uri = if ($pair[1] -eq 'openai') {
             # removido do Simple Icons oficial; usa um release antigo via jsDelivr
             'https://cdn.jsdelivr.net/npm/simple-icons@11/icons/openai.svg'
         } else {
-            "https://cdn.simpleicons.org/$slug/c7d1de"
+            "https://cdn.simpleicons.org/$($pair[1])/c7d1de"
         }
         Invoke-WebRequest -Uri $uri -UseBasicParsing -OutFile $file -ErrorAction Stop
         $svg = [System.IO.File]::ReadAllText($file)
@@ -378,7 +367,7 @@ foreach ($slug in @('vuedotjs', 'supabase', 'tailwindcss', 'docker', 'n8n', 'met
             $svg = $svg -replace '<svg ', '<svg fill="#c7d1de" '
             [System.IO.File]::WriteAllText($file, $svg, [System.Text.UTF8Encoding]::new($false))
         }
-        Write-Host "logo $slug.svg baixado"
+        Write-Host "logo $($pair[0]) baixado"
     }
 }
 
