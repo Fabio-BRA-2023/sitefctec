@@ -8,6 +8,9 @@
 # Permite as imagens do site
 !site-recriado/assets/**
 
+# Prints do site para o README
+!docs/**
+
 # Ambiente
 .vscode/
 node_modules/
